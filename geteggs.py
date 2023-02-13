@@ -5,35 +5,87 @@ import nxbt
 from nxbt import Buttons
 from nxbt import Sticks
 
-ReturntoGame = """
-LOOP 12
-    B 0.1s
-    0.1s
-1.5s
-LOOP 4
-    DPAD_LEFT 0.075s
-    0.075s
-DPAD_UP 0.075s
-0.075s
-A 0.1s
-1.5s
+"""
+    Y
+    X
+    B
+    A
+    JCL_SR
+    JCL_SL
+    R
+    ZR
+    MINUS
+    PLUS
+    R_STICK_PRESS
+    L_STICK_PRESS
+    HOME
+    CAPTURE
+    DPAD_DOWN
+    DPAD_UP
+    DPAD_RIGHT
+    DPAD_LEFT
+    JCR_SR
+    JCR_SL
+    L
+    ZL
 """
 
-CollectEggs = """
-LOOP 60
-    30.0s
-    Loop 8
-        A 0.5s
-        2s
-"""
+def button(sentButton = "A",duration = 0.25):
+    nx.press_buttons(controller_idx, [Buttons.sentButton], down = duration, up = 0.25)
+    return
+
+def move(direction = "LEFT", duration = 0.25):
+    match direction:
+        case "UP":
+            nx.tilt_stick(controller_idx, Sticks.LEFT_STICK, 0, 100,
+                  tilted=duration, released=0.25)
+        case "DOWN":
+            nx.tilt_stick(controller_idx, Sticks.LEFT_STICK, 0, -100,
+                  tilted=duration, released=0.25)
+        case "LEFT":
+            nx.tilt_stick(controller_idx, Sticks.LEFT_STICK, -100, 0,
+                  tilted=duration, released=0.25)
+        case "RIGHT":
+            nx.tilt_stick(controller_idx, Sticks.LEFT_STICK, 100, 0,
+                  tilted=duration, released=0.25)
+    return
+
+
+
+
+
+
+def returnToGame():
+    for x in range(6):
+        button("B")
+        time.sleep(0.1)
+    time.sleep(1.5)
+    for x in range(4):
+        button("DPAD_LEFT")
+        time.sleep(0.1)
+    button("DPAD_UP")
+    time.sleep(0.1)
+    button("A")
+    time.sleep(1.5)
+
+def collectEggs():
+    for x in range(30):
+        time.sleep(60)
+        for y in range(8): 
+            button("A", 0.50)
+            time.sleep(2)
+
+
+
+
 
 
 def random_colour():
 
     return [
-        randint(0, 255),
-        randint(0, 255),
-        randint(0, 255),
+        0,
+        0,
+        255,
     ]
 
 
@@ -65,7 +117,7 @@ if __name__ == "__main__":
 
     # Run a macro on the last controller
     print("Returning to game.")
-    macro_id = nx.macro(controller_idx, ReturntoGame)
-    print("Running main macro.")
-    macro_id = nx.macro(controller_idx, CollectEggs)
+    returnToGame()
+    print("Collecting Eggs.")
+    collectEggs()
     print("Macro finished, Exiting...")
